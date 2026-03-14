@@ -25,7 +25,7 @@ jobs:
           done
 
           echo "Creating new labels from labels.json..."
-          jq -c '.[]' .github/workflows/labels.json | while read -r label; do
+          jq -c '.[]' .github/labels.json | while read -r label; do
             NAME=$(echo $label | jq -r '.name')
             COLOR=$(echo $label | jq -r '.color')
             DESC=$(echo $label | jq -r '.description')
