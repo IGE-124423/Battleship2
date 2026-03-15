@@ -450,22 +450,6 @@ public class Game implements IGame
 	}
 
 	public void over() {
-			System.out.println();
-			System.out.println("+--------------------------------------------------------------+");
-			System.out.println("| Maldito sejas, Java Sparrow, eu voltarei, glub glub glub ... |");
-			System.out.println("+--------------------------------------------------------------+");
-		try {
-			System.out.println("Diretório atual: " + System.getProperty("user.dir"));
-			List<String> allMoves = getAllMovesAsStrings();
-			PDFExporter.exportMoves(allMoves, "JogadasDaPartida.pdf");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	public int getMoveCount() {
-		return moveNumber - 1;
-	}
-
-	public void over() {
 		String playedAt = LocalDateTime.now()
 				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
@@ -475,10 +459,20 @@ public class Game implements IGame
 				getMoveCount(),
 				playedAt
 		);
-
 		System.out.println();
 		System.out.println("+--------------------------------------------------------------+");
 		System.out.println("| Maldito sejas, Java Sparrow, eu voltarei, glub glub glub ... |");
 		System.out.println("+--------------------------------------------------------------+");
+		try {
+			System.out.println("Diretório atual: " + System.getProperty("user.dir"));
+			List<String> allMoves = getAllMovesAsStrings();
+			PDFExporter.exportMoves(allMoves, "JogadasDaPartida.pdf");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int getMoveCount() {
+		return moveNumber - 1;
 	}
 }
