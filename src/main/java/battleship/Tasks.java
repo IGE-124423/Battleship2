@@ -5,6 +5,7 @@ import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.apache.commons.lang3.time.StopWatch;
 
 /**
  * The type Tasks.
@@ -69,9 +70,15 @@ public class Tasks {
 					break;
 				case RAJADA:
 					if (game != null) {
+						StopWatch sw = StopWatch.createStarted();
+
 						game.readEnemyFire(in);
+
+						sw.stop();
 						myFleet.printStatus();
 						game.printMyBoard(true, false);
+
+						System.out.println(">>> Tempo gasto na jogada: " + sw.toString());
 
 						if (game.getRemainingShips() == 0) {
 							game.over();
