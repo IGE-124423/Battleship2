@@ -84,6 +84,13 @@
 			<version>${jetbrains.annotations.version}</version>
 			<scope>compile</scope>
 		</dependency>
+
+		<!-- FlatLaf for Modern Swing UI -->
+		<dependency>
+			<groupId>com.formdev</groupId>
+			<artifactId>flatlaf</artifactId>
+			<version>3.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>
