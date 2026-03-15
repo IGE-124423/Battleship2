@@ -1,10 +1,12 @@
 # Resposta à questão do LAB
-### 2.(...)  Como é que o Maven descobre quais são as dependências transitivas? Quando compilar o programa pela primeira vez, são todas descarregadas para o repositório local, sendo as próximas compilações mais rápidas. Porquê?
+### 2. (...)  Como é que o Maven descobre quais são as dependências transitivas? Quando compilar o programa pela primeira vez, são todas descarregadas para o repositório local, sendo as próximas compilações mais rápidas. Porquê?
 
 O Maven fica a conhecer as dependências transitivas através do ficheiro pom.xml que contém informação das bibliotecas declaradas no projeto. Cada biblioteca possui um POM que especifica as suas próprias dependências, permitindo ao Maven descarregar automaticamente todas as bibliotecas necessárias.
 Na primeira compilação, todas as dependências são descarregadas para o repositório local Maven. Nas compilações seguintes, essas dependências já estão armazenadas localmente, pelo que não precisam de ser descarregadas novamente, tornando o processo de compilação mais rápido.
 
 
+### LINK do código a funcionar + interação com LLM: https://youtu.be/An_3ju0UwD4
+# Prompt utilizado (Parte D, Passo 2)
 ## Estratégia de geração de rajadas de tiros
 
 A estratégia de geração de rajadas de tiros foi concebida para maximizar a eficiência dos disparos, reduzindo tentativas desperdiçadas e tirando partido da informação acumulada ao longo da partida. Para isso, o comportamento do jogador automático segue as regras descritas abaixo.
