@@ -30,6 +30,7 @@ public class Tasks {
 	private static final String DESISTIR = "desisto";
 	private static final String RAJADA = "rajada";
 	private static final String TIROS = "tiros";
+	private static final String JANELA = "janela";
 	private static final String MAPA = "mapa";
 	private static final String STATUS = "estado";
 	private static final String SIMULA = "simula";
@@ -108,6 +109,14 @@ public class Tasks {
 					if (game != null)
 						game.printMyBoard(true, true);
 					break;
+				case JANELA:
+					if (game != null) {
+						GameGUI gui = new GameGUI((Game) game);
+						gui.setVisible(true);
+					} else {
+						System.out.println("Erro: Gera primeiro uma frota usando 'gerafrota' ou 'lefrota'!");
+					}
+					break;
                 case AJUDA:
                     menuHelp();
                     break;
@@ -133,6 +142,7 @@ public class Tasks {
 		System.out.println("- " + RAJADA + ": Realiza uma rajada de disparos.");
 		System.out.println("- " + SIMULA + ": Simula um jogo completo.");
 		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água)");
+		System.out.println("- " + JANELA + ": Abre uma interface gráfica com o tabuleiro atual.");
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
 		System.out.println("===============================================================");
 	}
