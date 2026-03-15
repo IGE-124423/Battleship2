@@ -5,6 +5,65 @@ O Maven fica a conhecer as dependências transitivas através do ficheiro pom.xm
 Na primeira compilação, todas as dependências são descarregadas para o repositório local Maven. Nas compilações seguintes, essas dependências já estão armazenadas localmente, pelo que não precisam de ser descarregadas novamente, tornando o processo de compilação mais rápido.
 
 
+## Estratégia de geração de rajadas de tiros
+
+A estratégia de geração de rajadas de tiros foi concebida para maximizar a eficiência dos disparos, reduzindo tentativas desperdiçadas e tirando partido da informação acumulada ao longo da partida. Para isso, o comportamento do jogador automático segue as regras descritas abaixo.
+
+### 1. Manutenção de um Diário de Bordo
+
+Cada rajada disparada é registada num **Diário de Bordo**, sendo numerada sequencialmente (**Rajada 1, Rajada 2, Rajada 3, ...**).  
+Para cada tiro efetuado, são armazenados:
+- a coordenada exata do disparo;
+- o resultado obtido, como por exemplo:
+  - Água
+  - Navio atingido
+  - Navio afundado
+
+Este registo histórico permite utilizar a informação recolhida em jogadas anteriores para melhorar a tomada de decisão nas jogadas seguintes.
+
+### 2. Evitar tiros inválidos ou repetidos
+
+A estratégia nunca deve disparar:
+- fora dos limites do mapa;
+- em coordenadas já anteriormente testadas.
+
+A única exceção ocorre na última rajada do jogo, caso seja necessário completar os **3 tiros obrigatórios**, mesmo quando a frota inimiga já se encontra totalmente destruída.
+
+### 3. Exploração de posições contíguas após um acerto
+
+Quando um tiro atinge um navio, a jogada seguinte deve privilegiar as posições contíguas ao impacto:
+- Norte
+- Sul
+- Este
+- Oeste
+
+O objetivo é descobrir rapidamente a orientação da embarcação e aumentar a probabilidade de a afundar nas jogadas seguintes.
+
+No entanto, se a rajada anterior já tiver confirmado que o navio foi afundado, esta exploração não deve continuar, uma vez que os navios nunca podem estar encostados entre si.
+
+### 4. Aproveitamento da orientação linear dos navios
+
+As embarcações **Caravela**, **Nau** e **Fragata** ocupam posições em linha reta. Assim, um tiro certeiro indica que o restante corpo do navio se encontra alinhado na horizontal ou na vertical.
+
+Além disso, como os navios não se podem tocar, nem sequer nas diagonais, as posições diagonais relativamente a um tiro certeiro podem ser consideradas **água garantida**.
+
+A única exceção é o **Galeão**, cuja forma em **T** impede esta simplificação em todos os casos.
+
+### 5. Marcação do halo de segurança após afundamento
+
+Quando uma rajada confirma que um navio foi afundado, deve ser feita uma análise ao Diário de Bordo para identificar exatamente todas as posições ocupadas por essa embarcação.
+
+Depois de determinada a localização completa do navio, todas as quadrículas adjacentes ao seu redor devem ser marcadas como **água intransitável**, formando um halo de segurança.
+
+Isto é válido porque, pelas regras do jogo, não pode existir qualquer outra embarcação nesse perímetro.
+
+### 6. Resolução do jogo
+
+Se a frota própria for totalmente destruída, o jogador deve declarar a derrota.
+
+Se, pelo contrário, for a frota inimiga a ficar totalmente afundada, o jogador deve assinalar a vitória.
+
+
 # ⚓ Battleship 2.0
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
