@@ -5,6 +5,7 @@ import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.apache.commons.lang3.time.StopWatch;
 
 /**
  * The type Tasks.
@@ -29,6 +30,7 @@ public class Tasks {
 	private static final String DESISTIR = "desisto";
 	private static final String RAJADA = "rajada";
 	private static final String TIROS = "tiros";
+	private static final String JANELA = "janela";
 	private static final String MAPA = "mapa";
 	private static final String STATUS = "estado";
 	private static final String SIMULA = "simula";
@@ -69,9 +71,15 @@ public class Tasks {
 					break;
 				case RAJADA:
 					if (game != null) {
+						StopWatch sw = StopWatch.createStarted();
+
 						game.readEnemyFire(in);
+
+						sw.stop();
 						myFleet.printStatus();
 						game.printMyBoard(true, false);
+
+						System.out.println(">>> Tempo gasto na jogada: " + sw.toString());
 
 						if (game.getRemainingShips() == 0) {
 							game.over();
@@ -108,6 +116,17 @@ public class Tasks {
 				case AJUDA:
 					menuHelp();
 					break;
+				case JANELA:
+					if (game != null) {
+						GameGUI gui = new GameGUI((Game) game);
+						gui.setVisible(true);
+					} else {
+						System.out.println("Erro: Gera primeiro uma frota usando 'gerafrota' ou 'lefrota'!");
+					}
+					break;
+                case AJUDA:
+                    menuHelp();
+                    break;
 				default:
 					System.out.println("Que comando é esse??? Repete ...");
 			}
@@ -131,6 +150,8 @@ public class Tasks {
 		System.out.println("- " + SIMULA + ": Simula um jogo completo.");
 		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água).");
 		System.out.println("- " + SCOREBOARD + ": Mostra o histórico dos jogos terminados.");
+		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água)");
+		System.out.println("- " + JANELA + ": Abre uma interface gráfica com o tabuleiro atual.");
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
 		System.out.println("===============================================================");
 	}
