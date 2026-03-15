@@ -32,6 +32,7 @@ public class Tasks {
 	private static final String MAPA = "mapa";
 	private static final String STATUS = "estado";
 	private static final String SIMULA = "simula";
+	private static final String SCOREBOARD = "scoreboard";
 
 	/**
 	 * This task also tests the fighting element of a round of three shots
@@ -80,14 +81,14 @@ public class Tasks {
 					break;
 				case SIMULA:
 					if (game != null) {
-						while (game.getRemainingShips() > 0){
+						while (game.getRemainingShips() > 0) {
 							game.randomEnemyFire();
 							myFleet.printStatus();
 							game.printMyBoard(true, false);
 							try {
 								Thread.sleep(3000);
 							} catch (InterruptedException e) {
-								Thread.currentThread().interrupt(); // Best practice: restore interrupt status
+								Thread.currentThread().interrupt();
 							}
 						}
 
@@ -101,9 +102,12 @@ public class Tasks {
 					if (game != null)
 						game.printMyBoard(true, true);
 					break;
-                case AJUDA:
-                    menuHelp();
-                    break;
+				case SCOREBOARD:
+					ScoreboardDatabase.printScoreboard();
+					break;
+				case AJUDA:
+					menuHelp();
+					break;
 				default:
 					System.out.println("Que comando é esse??? Repete ...");
 			}
@@ -121,14 +125,16 @@ public class Tasks {
 		System.out.println("Digite um dos comandos abaixo para interagir com o jogo:");
 		System.out.println("- " + GERAFROTA + ": Gera uma frota aleatória de navios.");
 		System.out.println("- " + LEFROTA + ": Permite criar e carregar uma frota personalizada.");
-		System.out.println("- " + STATUS + ": Mostra o status atual da frota.)");
+		System.out.println("- " + STATUS + ": Mostra o estado atual da frota.");
 		System.out.println("- " + MAPA + ": Exibe o mapa da frota.");
 		System.out.println("- " + RAJADA + ": Realiza uma rajada de disparos.");
 		System.out.println("- " + SIMULA + ": Simula um jogo completo.");
-		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água)");
+		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água).");
+		System.out.println("- " + SCOREBOARD + ": Mostra o histórico dos jogos terminados.");
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
 		System.out.println("===============================================================");
 	}
+
 	/**
 	 * This operation allows the build up of a fleet, given user data
 	 *
@@ -196,35 +202,31 @@ public class Tasks {
 	 * @return The classic position that has been read
 	 */
 	public static IPosition readClassicPosition(@NotNull Scanner in) {
-		// Verifica se ainda há tokens disponíveis
 		if (!in.hasNext()) {
 			throw new IllegalArgumentException("Nenhuma posição válida encontrada!");
 		}
 
-		String part1 = in.next(); // Primeiro token
+		String part1 = in.next();
 		String part2 = null;
 
 		if (in.hasNextInt()) {
-			part2 = in.next(); // Segundo token, se disponível
+			part2 = in.next();
 		}
 
 		String input = (part2 != null) ? part1 + part2 : part1;
 
-		// Normalizar o input para tratar letras maiúsculas e minúsculas
 		input = input.toUpperCase();
 
-		// Verificar os dois formatos possíveis: compactos e com espaço
 		if (input.matches("[A-Z]\\d+")) {
-			char column = input.charAt(0); // Extrair a coluna
-			int row = Integer.parseInt(input.substring(1)); // Extrair a linha
+			char column = input.charAt(0);
+			int row = Integer.parseInt(input.substring(1));
 			return new Position(column, row);
 		} else if (part2 != null && part1.matches("[A-Z]") && part2.matches("\\d+")) {
-			char column = part1.charAt(0); // Extrair a coluna
-			int row = Integer.parseInt(part2); // Extrair a linha
+			char column = part1.charAt(0);
+			int row = Integer.parseInt(part2);
 			return new Position(column, row);
 		} else {
 			throw new IllegalArgumentException("Formato inválido. Use 'A3', 'A 3' ou similar.");
 		}
 	}
-
 }
