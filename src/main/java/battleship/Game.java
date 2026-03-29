@@ -9,8 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 import java.util.*;
 
-public class Game implements IGame
-{
+public class Game implements IGame {
 	/**
 	 * Prints the game board by representing the positions of ships, adjacent tiles,
 	 * shots, and other game elements onto the console. The method also optionally
@@ -450,10 +449,10 @@ public class Game implements IGame
 	}
 
 	public void over() {
-			System.out.println();
-			System.out.println("+--------------------------------------------------------------+");
-			System.out.println("| Maldito sejas, Java Sparrow, eu voltarei, glub glub glub ... |");
-			System.out.println("+--------------------------------------------------------------+");
+		System.out.println();
+		System.out.println("+--------------------------------------------------------------+");
+		System.out.println("| Maldito sejas, Java Sparrow, eu voltarei, glub glub glub ... |");
+		System.out.println("+--------------------------------------------------------------+");
 		try {
 			System.out.println("Diretório atual: " + System.getProperty("user.dir"));
 			List<String> allMoves = getAllMovesAsStrings();
@@ -461,6 +460,7 @@ public class Game implements IGame
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
 	public int getMoveCount() {
 		return moveNumber - 1;
 	}
