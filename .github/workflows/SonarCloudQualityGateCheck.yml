@@ -2,9 +2,9 @@ name: SonarCloud Quality Gate Check
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "criaPDF" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "criaPDF" ]
 
 jobs:
   sonarcloud-quality-gate:
