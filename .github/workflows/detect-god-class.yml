@@ -18,10 +18,7 @@ name: Code Quality — God Class Detection
 
 on:
   push:
-    branches: [ main, master, develop ]
-  pull_request:
-    branches: [ main, master, develop ]
-  workflow_dispatch:
+    branches: [ "feature/visualizacao-grafica"]
 
 jobs:
 
