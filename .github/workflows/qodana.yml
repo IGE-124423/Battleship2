@@ -19,7 +19,7 @@ jobs:
       - name: Run Qodana
         uses: JetBrains/qodana-action@v2023.3
         with:
-          linter: jetbrains/qodana-jvm
+          linter: jetbrains/qodana-jvm:2025.3
           args: --fail-threshold 1
 
       - name: Upload Qodana report
