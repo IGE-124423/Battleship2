@@ -124,9 +124,6 @@ public class Tasks {
 						System.out.println("Erro: Gera primeiro uma frota usando 'gerafrota' ou 'lefrota'!");
 					}
 					break;
-                case AJUDA:
-                    menuHelp();
-                    break;
 				default:
 					System.out.println("Que comando é esse??? Repete ...");
 			}
