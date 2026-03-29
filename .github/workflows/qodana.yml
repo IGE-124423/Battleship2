@@ -60,4 +60,5 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_122477 }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
           -Dsonar.projectKey=maria-frade_asasdad \
-          -Dsonar.organization=IGE-122477
+          -Dsonar.organization=IGE-122477 \
+          -Dsonar.branch.name=criaPDF
