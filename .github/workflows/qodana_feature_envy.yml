@@ -3,9 +3,11 @@ name: Qodana Feature Envy Detection
 
 on:
   push:
-    branches: [ main, feature/* ]
+    branches:
+      - '**'
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   qodana:
