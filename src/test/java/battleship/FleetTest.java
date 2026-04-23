@@ -61,11 +61,14 @@ import java.util.ArrayList;
 		 */
 		@Test
 		void testAddShip2() {
-			for (int i = 0; i < Fleet.FLEET_SIZE; i++) {
-				fleet.addShip(new Barge(Compass.NORTH, new Position(i, 0)));
+			for (int i = 0; i < Fleet.FLEET_SIZE + 1; i++) {
+				fleet.getShips().add(new Barge(Compass.NORTH, new Position(0, 0)));
 			}
-			IShip anotherShip = new Barge(Compass.NORTH, new Position(10, 10));
-			assertFalse(fleet.addShip(anotherShip), "Error: Should not add ship when fleet size limit is reached.");
+
+			IShip validShip = new Barge(Compass.NORTH, new Position(5, 5));
+
+			assertFalse(fleet.addShip(validShip),
+					"Error: Should not add ship when fleet size limit is already exceeded.");
 		}
 
 		/**
@@ -195,4 +198,77 @@ import java.util.ArrayList;
 			fleet.addShip(ship);
 			assertDoesNotThrow(fleet::printStatus, "Error: printStatus should not throw any exceptions.");
 		}
+
+	@Test
+	void testGetShipsLikeWhenNoShipsMatch() {
+		IShip ship = new Barge(Compass.NORTH, new Position(1, 1));
+		fleet.addShip(ship);
+
+		List<IShip> frigates = fleet.getShipsLike("Fragata");
+
+		assertTrue(frigates.isEmpty(),
+				"Error: Should return an empty list when no ships match the category.");
+	}
+
+	@Test
+	void testGetSunkShips() {
+		IShip ship1 = new Barge(Compass.NORTH, new Position(1, 1));
+		IShip ship2 = new Barge(Compass.NORTH, new Position(5, 5));
+
+		fleet.addShip(ship1);
+		fleet.addShip(ship2);
+
+		ship1.getPositions().get(0).shoot();
+
+		List<IShip> sunkShips = fleet.getSunkShips();
+
+		assertEquals(1, sunkShips.size(),
+				"Error: There should be exactly one sunk ship.");
+		assertEquals(ship1, sunkShips.get(0),
+				"Error: The sunk ship should be the one that was hit.");
+	}
+
+	@Test
+	void testShipAtWhenFleetIsEmpty() {
+		assertNull(fleet.shipAt(new Position(1, 1)),
+				"Error: shipAt should return null when the fleet is empty.");
+	}
+
+	@Test
+	void testPrintShipsByCategory() {
+		IShip ship = new Barge(Compass.NORTH, new Position(1, 1));
+		fleet.addShip(ship);
+
+		assertDoesNotThrow(() -> fleet.printShipsByCategory("Barca"),
+				"Error: printShipsByCategory should not throw exceptions.");
+	}
+
+	@Test
+	void testPrintFloatingShips() {
+		IShip ship = new Barge(Compass.NORTH, new Position(1, 1));
+		fleet.addShip(ship);
+
+		assertDoesNotThrow(fleet::printFloatingShips,
+				"Error: printFloatingShips should not throw exceptions.");
+	}
+
+	@Test
+	void testPrintAllShips() {
+		IShip ship = new Barge(Compass.NORTH, new Position(1, 1));
+		fleet.addShip(ship);
+
+		assertDoesNotThrow(fleet::printAllShips,
+				"Error: printAllShips should not throw exceptions.");
+	}
+
+	@Test
+	void testCreateRandom() {
+		IFleet randomFleet = Fleet.createRandom();
+
+		assertNotNull(randomFleet, "Error: createRandom should not return null.");
+		assertEquals(Fleet.FLEET_SIZE, randomFleet.getShips().size(),
+				"Error: Random fleet should contain exactly FLEET_SIZE ships.");
+	}
+
+
 	}

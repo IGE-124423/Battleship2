@@ -62,7 +62,8 @@ public class PositionTest {
 
 	@Test
 	void getClassicColumn() {
-		assertEquals(3, position.getColumn(), "Failed to get column: expected 3 but got " + position.getColumn());
+		assertEquals(4, position.getClassicColumn(),
+				"Failed to get classic column: expected 4 but got " + position.getClassicColumn());
 	}
 
 	@Test
@@ -182,4 +183,57 @@ public class PositionTest {
 				"Incorrect string representation: expected '" + expected +
 						"' but got '" + position.toString() + "'");
 	}
+
+	@Test
+	void constructorWithClassicCoordinates() {
+		Position pos = new Position('c', 4);
+
+		assertAll(
+				() -> assertEquals(2, pos.getRow(), "Error: classic row 'c' devia corresponder a row 2."),
+				() -> assertEquals(3, pos.getColumn(), "Error: classic column 4 devia corresponder a column 3."),
+				() -> assertEquals('C', pos.getClassicRow(), "Error: classic row devia ser 'C'."),
+				() -> assertEquals(4, pos.getClassicColumn(), "Error: classic column devia ser 4."),
+				() -> assertFalse(pos.isOccupied(), "Error: nova posição não devia estar ocupada."),
+				() -> assertFalse(pos.isHit(), "Error: nova posição não devia estar atingida.")
+		);
+	}
+
+	@Test
+	void randomPositionShouldBeInsideBoard() {
+		Position random = Position.randomPosition();
+
+		assertTrue(random.isInside(), "Error: randomPosition() devia gerar sempre posições dentro do tabuleiro.");
+	}
+
+	@Test
+	void adjacentPositionsFromCenterShouldReturnEightPositions() {
+		Position pos = new Position(5, 5);
+
+		var adjacents = pos.adjacentPositions();
+
+		assertEquals(8, adjacents.size(), "Error: uma posição central devia ter 8 adjacentes.");
+		assertTrue(adjacents.contains(new Position(4, 5)), "Error: devia conter a posição a norte.");
+		assertTrue(adjacents.contains(new Position(5, 6)), "Error: devia conter a posição a este.");
+		assertTrue(adjacents.contains(new Position(6, 5)), "Error: devia conter a posição a sul.");
+		assertTrue(adjacents.contains(new Position(5, 4)), "Error: devia conter a posição a oeste.");
+		assertTrue(adjacents.contains(new Position(4, 4)), "Error: devia conter a diagonal noroeste.");
+		assertTrue(adjacents.contains(new Position(4, 6)), "Error: devia conter a diagonal nordeste.");
+		assertTrue(adjacents.contains(new Position(6, 4)), "Error: devia conter a diagonal sudoeste.");
+		assertTrue(adjacents.contains(new Position(6, 6)), "Error: devia conter a diagonal sudeste.");
+	}
+
+	@Test
+	void adjacentPositionsFromCornerShouldReturnThreePositions() {
+		Position pos = new Position(0, 0);
+
+		var adjacents = pos.adjacentPositions();
+
+		assertEquals(3, adjacents.size(), "Error: um canto devia ter 3 adjacentes válidas.");
+		assertTrue(adjacents.contains(new Position(0, 1)), "Error: devia conter a posição à direita.");
+		assertTrue(adjacents.contains(new Position(1, 0)), "Error: devia conter a posição abaixo.");
+		assertTrue(adjacents.contains(new Position(1, 1)), "Error: devia conter a diagonal.");
+	}
+
+
+
 }
