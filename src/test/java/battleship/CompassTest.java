@@ -88,4 +88,20 @@ public class CompassTest {
 	void charToCompass3() {
 		assertNull(Compass.charToCompass('\0'), "Error: Null character should map to null.");
 	}
+
+	/**
+	 * Test for the randomBearing method
+	 * Cyclomatic Complexity: 1
+	 */
+	@Test
+	@DisplayName("Tests the construction of a random Bearing")
+	void testRandomBearing() {
+		java.util.Set<Compass> expectedValues = new java.util.HashSet<>();
+
+		for (int i = 0; i < 100; i++) {
+			expectedValues.add(Compass.randomBearing());
+		}
+
+		assertEquals(Compass.values().length, expectedValues.size(),"Error: All compass values should appear at least and only once");
+	}
 }

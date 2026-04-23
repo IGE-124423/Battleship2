@@ -411,5 +411,4 @@ public class ShipTest {
         assertThrows(AssertionError.class, () -> ship.tooCloseTo((IPosition) null),"Error: method should not accept a null argument.");
     }
 
-
 }
