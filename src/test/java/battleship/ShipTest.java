@@ -225,4 +225,191 @@ public class ShipTest {
     void testGetRightMostPos() {
         assertEquals(5, ship.getRightMostPos(), "Error: The rightmost position should be 5.");
     }
+
+    /**
+     * Test for the stillFloating method (partial positions hit).
+     */
+    @Test
+    @DisplayName("Tests the condition for when a ship is partially hit")
+    void testStillFloating3() {
+        Ship caravela = Ship.buildShip("caravela", Compass.NORTH, new Position(5, 5));
+        caravela.getPositions().get(0).shoot();
+
+        assertTrue(caravela.stillFloating(), "Error: Ship should be floating when only one part is hit.");
+    }
+
+    /**
+     * Test for the getTopMostPos and getBottomMostPos method (Galeao).
+     * Cyclomatic Complexity: 1
+     */
+    @Test
+    @DisplayName("Forces the for cicle in getTopMostPos and getBottomMostPos")
+    void testTopBottomGalleon() {
+        Ship galeao = Ship.buildShip("galeao", Compass.NORTH, new Position(5, 5));
+
+        assertEquals(5, galeao.getTopMostPos(), "Error: Galeao's top should be in row 5.");
+        assertEquals(7, galeao.getBottomMostPos(), "Error: Galeao's bottom should be in row 7.");
+    }
+
+    /**
+     * Test for the getLeftMostPos and getRightMostPos method (Galeao).
+     * Cyclomatic Complexity: 1
+     */
+    @Test
+    @DisplayName("Forces the for cicle in getLeftMostPos and getRightMostPos")
+    void testLeftRightGalleon() {
+        Ship galeao = Ship.buildShip("galeao", Compass.EAST, new Position(5, 5));
+        assertEquals(3, galeao.getLeftMostPos(), "Error: Galeao's left should be in column 5.");
+        assertEquals(5, galeao.getRightMostPos(), "Error: Galeao's right should be in column 8.");
+    }
+
+    /**
+     * Test for the getAdjacentPositions method.
+     * Cyclomatic Complexity: 5
+     */
+    @Test
+    @DisplayName("Compares the values given by the method with the expected values")
+    void testGetAdjacentPositions1() {
+        List<IPosition> expectedAdjacents = new java.util.ArrayList<IPosition>();
+
+        expectedAdjacents.add(new Position(4, 4)); expectedAdjacents.add(new Position(4, 5));
+        expectedAdjacents.add(new Position(4, 6)); expectedAdjacents.add(new Position(5, 4));
+        expectedAdjacents.add(new Position(5, 6)); expectedAdjacents.add(new Position(6, 4));
+        expectedAdjacents.add(new Position(6, 5)); expectedAdjacents.add(new Position(6, 6));
+
+        List<IPosition> actualAdjacents = ship.getAdjacentPositions();
+        assertNotNull(actualAdjacents, "Error: AdjacentPositions List should not be null");
+        assertFalse(actualAdjacents.isEmpty(), "Error: AdjacentPositions List should not be empty");
+        assertEquals(expectedAdjacents.size(), actualAdjacents.size(), "Error: The method didn't gave all possible adjacents.");
+        assertTrue(actualAdjacents.containsAll(expectedAdjacents), "Error: The method doesn't give the expected adjacent positions.");
+    }
+
+    /**
+     * Test for the getAdjacentPositions method(Bigger boat).
+     */
+    @Test
+    @DisplayName("Compares the values given by the method with the expected values for a bigger boat")
+    void testGetAdjacentPositions2() {
+        Ship galeao = Ship.buildShip("galeao", Compass.NORTH, new Position(5, 5));
+        List<IPosition> expectedAdjacents = new java.util.ArrayList<IPosition>();
+
+        expectedAdjacents.add(new Position(4, 4)); expectedAdjacents.add(new Position(4, 5));
+        expectedAdjacents.add(new Position(4, 6)); expectedAdjacents.add(new Position(4, 7));
+        expectedAdjacents.add(new Position(4, 8)); expectedAdjacents.add(new Position(5, 4));
+        expectedAdjacents.add(new Position(5, 8)); expectedAdjacents.add(new Position(6, 4));
+        expectedAdjacents.add(new Position(6, 5)); expectedAdjacents.add(new Position(6, 7));
+        expectedAdjacents.add(new Position(6, 8)); expectedAdjacents.add(new Position(7, 5));
+        expectedAdjacents.add(new Position(7, 7)); expectedAdjacents.add(new Position(8, 5));
+        expectedAdjacents.add(new Position(8, 6)); expectedAdjacents.add(new Position(8, 7));
+
+        List<IPosition> actualAdjacents = galeao.getAdjacentPositions();
+        assertNotNull(actualAdjacents, "Error: AdjacentPositions List should not be null");
+        assertFalse(actualAdjacents.isEmpty(), "Error: AdjacentPositions List should not be empty");
+        assertEquals(expectedAdjacents.size(), actualAdjacents.size(), "Error: The method didn't gave all possible adjacents.");
+        assertTrue(actualAdjacents.containsAll(expectedAdjacents), "Error: The method doesn't give the expected adjacent positions.");
+    }
+
+    /**
+     * Test for the getPosition method.
+     * Cyclomatic Complexity: 2
+     */
+    @Test
+    @DisplayName("Verifies if ship's initial position equals (5,5)")
+    void testGetPosition() {
+        Position expectedPosition = new Position(5,5);
+
+        assertNotNull(ship.getPosition(), "Error: Position of the ship should not be null.");
+        assertEquals(expectedPosition, ship.getPosition(), "Error: getPosition() should give position(5, 5).");
+    }
+
+    /**
+     * Test for the sink method.
+     * Cyclomatic Complexity: 2
+     */
+    @Test
+    @DisplayName("Checks if all positions have state isHit == True when ship is sunked")
+    void testSink() {
+        ship.sink();
+        for (IPosition pos : ship.getPositions()) {
+            assertTrue(pos.isHit(), "Error: When sunk, ship position" + pos + " state should be isHit=True.");
+        }
+    }
+
+    /**
+     * Test for the toString method.
+     * Cyclomatic Complexity: 1
+     */
+    @Test
+    @DisplayName("Checks if the toString method gives the corret format")
+    void testToString() {
+        assertEquals("[Barca n F6]", ship.toString(),"Error: String representation for ship should be [Barca n (5,5)].");
+    }
+
+    /**
+     * Test for the buildShip method.
+     * Cyclomatic Complexity: 6
+     */
+    @Test
+    @DisplayName("Tests buildShip for all cases including invalid case")
+    void testBuildShip() {
+        assertThrows(AssertionError.class, () -> Ship.buildShip(null, Compass.NORTH, new Position(1,1)), "Error: buildShip should not accepts null value for shipkind");
+        assertThrows(AssertionError.class, () -> Ship.buildShip("barca", Compass.NORTH, null),"Error: buildShip should not accepts null value for position");
+        assertThrows(AssertionError.class, () -> Ship.buildShip("barca", null, new Position(1,1)),"Error: buildShip should not accepts null value for bearing");
+        assertNotNull(Ship.buildShip("barca", Compass.NORTH, new Position(1,1)),"Error: Ship instance should not be null.");
+        assertNotNull(Ship.buildShip("caravela", Compass.NORTH, new Position(1,1)),"Error: Ship instance should not be null.");
+        assertNotNull(Ship.buildShip("nau", Compass.NORTH, new Position(1,1)),"Error: Ship instance should not be null.");
+        assertNotNull(Ship.buildShip("fragata", Compass.NORTH, new Position(1,1)),"Error: Ship instance should not be null.");
+        assertNotNull(Ship.buildShip("galeao", Compass.NORTH, new Position(1,1)),"Error: Ship instance should not be null.");
+        assertNull(Ship.buildShip("submarino", Compass.NORTH, new Position(1,1)), "Error: Ship instance should be null for invalid case");
+        assertThrows(NullPointerException.class, () -> new Barge(null, new Position(1,1)), "Error: Should throw NPE for null bearing");
+        assertThrows(NullPointerException.class, () -> new Barge(Compass.NORTH, null), "Error: Should throw NPE for null position");
+    }
+
+    /**
+     * Test for the shoot method (null position).
+     */
+    @Test
+    @DisplayName("Test for when the argument is null")
+    void testShoot3() {
+        assertThrows(AssertionError.class, () -> ship.shoot(null), "Error: method should not accept a null argument");
+    }
+
+    /**
+     * Test for the shoot method (null position).
+     */
+    @Test
+    @DisplayName("Test for when the given position is outside the board")
+    void testShoot4() {
+        IPosition invalid = new Position(-1, -1); // assuming isInside() == false
+        assertThrows(AssertionError.class, () -> ship.shoot(invalid), "Error: Method should confirm if position is within board range");
+    }
+
+    /**
+     * Test for the occupies method (position is null).
+     */
+    @Test
+    @DisplayName("Test for when method argument is null")
+    void testOccupies3() {
+        assertThrows(AssertionError.class, () -> ship.occupies(null), "Error: method should not accept a null argument");
+    }
+
+    /**
+     * Test for the tooCloseTo method with another IShip (IShip is null).
+     */
+    @Test
+    @DisplayName("Test for when method argument is null")
+    void testTooCloseToShip3() {
+        assertThrows(AssertionError.class, () -> ship.tooCloseTo((IShip) null),"Error: method should not accept a null argument.");
+    }
+
+    /**
+     * Test for the tooCloseTo method with an IPosition (positions null).
+     */
+    @Test
+    @DisplayName("Test for when method argument is null")
+    void testTooCloseToPosition3() {
+        assertThrows(AssertionError.class, () -> ship.tooCloseTo((IPosition) null),"Error: method should not accept a null argument.");
+    }
+
+
 }
