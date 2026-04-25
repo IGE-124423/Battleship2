@@ -24,6 +24,5 @@ jobs:
         with:
           upload-result: true
           artifact-name: qodana-report
-          results-dir: ${{ runner.temp }}/qodana/results
           use-annotations: false
           post-pr-comment: false
