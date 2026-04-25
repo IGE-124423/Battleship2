@@ -48,9 +48,6 @@ public class Fleet implements IFleet
 
     // -----------------------------------------------------
 
-	/**
-	 * The Ships.
-	 */
 	private final List<IShip> ships;
 
 	// -----------------------------------------------------ge
@@ -63,6 +60,8 @@ public class Fleet implements IFleet
     }
 
 	/**
+	 * The Ships.
+	 */ /**
 	 * Gets ships.
 	 *
 	 * @return the ships
@@ -90,9 +89,9 @@ public class Fleet implements IFleet
 		assert s != null;
 
 		boolean result = false;
-		if ((ships.size() <= FLEET_SIZE) && (isInsideBoard(s)) && (!colisionRisk(s)))
+		if ((getShips().size() <= FLEET_SIZE) && (isInsideBoard(s)) && (!colisionRisk(s)))
 		{
-			ships.add(s);
+			getShips().add(s);
 			result = true;
 		}
 		return result;
@@ -115,7 +114,7 @@ public class Fleet implements IFleet
 		assert category != null;
 
 		List<IShip> shipsLike = new ArrayList<>();
-		for (IShip s : ships)
+		for (IShip s : getShips())
 			if (s.getCategory().equals(category))
 				shipsLike.add(s);
 
@@ -136,7 +135,7 @@ public class Fleet implements IFleet
     public List<IShip> getFloatingShips()
     {
 		List<IShip> floatingShips = new ArrayList<IShip>();
-		for (IShip s : ships)
+		for (IShip s : getShips())
 			if (s.stillFloating())
 				floatingShips.add(s);
 
@@ -157,7 +156,7 @@ public class Fleet implements IFleet
 	public List<IShip> getSunkShips()
 	{
 		List<IShip> sunkShips = new ArrayList<IShip>();
-		for (IShip s : ships)
+		for (IShip s : getShips())
 			if (!s.stillFloating())
 				sunkShips.add(s);
 
@@ -180,7 +179,7 @@ public class Fleet implements IFleet
     {
 		assert pos != null;
 
-		for (IShip ship : ships)
+		for (IShip ship : getShips())
 			if (ship.occupies(pos))
 				return ship;
 		return null;
@@ -196,8 +195,15 @@ public class Fleet implements IFleet
     {
 		assert s != null;
 
-		return (s.getLeftMostPos() >= 0 && s.getRightMostPos() <= Game.BOARD_SIZE - 1 && s.getTopMostPos() >= 0
-			&& s.getBottomMostPos() <= Game.BOARD_SIZE - 1);
+		if (s.getLeftMostPos() < 0) return false;
+
+		if (s.getRightMostPos() >= Game.BOARD_SIZE) return false;
+
+		if (s.getTopMostPos() < 0) return false;
+
+		if (s.getBottomMostPos() >= Game.BOARD_SIZE) return false;
+
+		return true;
     }
 
 	/**
@@ -210,9 +216,9 @@ public class Fleet implements IFleet
     {
 		assert s != null;
 
-		for (int i = 0; i < ships.size(); i++)
+		for (int i = 0; i < getShips().size(); i++)
 		{
-			if (ships.get(i).tooCloseTo(s))
+			if (getShips().get(i).tooCloseTo(s))
 				return true;
 		}
 		return false;
@@ -272,6 +278,6 @@ public class Fleet implements IFleet
 	 */
 	void printAllShips()
     {
-		printShips(ships);
+		printShips(getShips());
     }
 }

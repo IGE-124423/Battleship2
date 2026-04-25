@@ -16,6 +16,15 @@ profile:
 #Enable inspections
 include:
   - name: FeatureEnvy
+  - name: PublicConstructor
+  - name: ChainedMethodCall
+  - name: FieldMayBeFinal
+  - name: ImplicitCallToSuper
+  - name: LocalCanBeFinal
+  - name: StandardVariableNames
+  - name: UnqualifiedStaticUsage
+  - name: UNUSED_IMPORT
+  - name: UtilityClassCanBeEnum
 
 #Disable inspections
 #exclude:
@@ -45,4 +54,4 @@ failureConditions:
 #    total: 50
 
 #Specify Qodana linter for analysis (Applied in CI/CD pipeline)
-linter: jetbrains/qodana-jvm:2025.3
+linter: "jetbrains/qodana-jvm:2025.3\r"

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.util.*;
+import java.util.random.RandomGenerator;
 
 public class Game implements IGame
 {
@@ -213,7 +214,7 @@ public class Game implements IGame
 	public String randomEnemyFire() {
 
 		// Criar uma instância de Random com uma seed baseada no timestamp atual
-		Random random = new Random(System.currentTimeMillis());
+		RandomGenerator random = new Random(System.currentTimeMillis());
 
 		Set<IPosition> usablePositions = new HashSet<IPosition>();
 		for (int r = 0; r < BOARD_SIZE; r++)
