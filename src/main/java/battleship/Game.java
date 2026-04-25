@@ -4,6 +4,8 @@ import java.io.IOException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.jetbrains.annotations.NotNull;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -31,33 +33,46 @@ public class Game implements IGame
 		assert fleet != null;
 		assert moves != null;
 
-		char[][] map = new char[BOARD_SIZE][BOARD_SIZE];
+		char[][] map = initMap();
 
-		for (int r = 0; r < BOARD_SIZE; r++)
-			for (int c = 0; c < BOARD_SIZE; c++)
-				map[r][c] = EMPTY_MARKER;
+		markShipsOnMap(fleet, map);
+		markShotsOnMap(moves, show_shots, map);
 
-		for (IShip ship : fleet.getShips()) {
-			for (IPosition ship_pos : ship.getPositions())
-				map[ship_pos.getRow()][ship_pos.getColumn()] = SHIP_MARKER;
-			if (!ship.stillFloating())
-				for (IPosition adjacent_pos : ship.getAdjacentPositions())
-					map[adjacent_pos.getRow()][adjacent_pos.getColumn()] = SHIP_ADJACENT_MARKER;
+		printHeader();
+		printMapRows(map);
+		printFooter();
+
+		if (showLegend) {
+			printLegend();
 		}
+		System.out.println();
+	}
 
-		if (show_shots)
-			for (IMove move : moves)
-				for (IPosition shot : move.getShots()) {
-					if (shot.isInside()){
-						int row = shot.getRow();
-						int col = shot.getColumn();
-						if (map[row][col] == SHIP_MARKER)
-							map[row][col] = SHOT_SHIP_MARKER;
-						if (map[row][col] == EMPTY_MARKER || map[row][col] == SHIP_ADJACENT_MARKER)
-							map[row][col] = SHOT_WATER_MARKER;
-					}
-				}
+	private static void printLegend() {
+		System.out.println("          LEGENDA");
+		System.out.println("'" + SHIP_MARKER + "'->navio, '" + SHIP_ADJACENT_MARKER + "'->adjacente a navio, '" + EMPTY_MARKER + "'->água");
+		System.out.println("'" + SHOT_SHIP_MARKER + "'->Tiro certeiro, '" + SHOT_WATER_MARKER + "'->Tiro na água");
+	}
 
+	private static void printMapRows(char[][] map) {
+		for (int row = 0; row < BOARD_SIZE; row++) {
+			Position pos = new Position(row, 0);
+			char rowLabel = pos.getClassicRow();
+			System.out.print(" " + rowLabel + " |");
+			for (int col = 0; col < BOARD_SIZE; col++)
+				System.out.print(" " + map[row][col]);
+			System.out.println(" |");
+		}
+	}
+
+	private static void printFooter() {
+		System.out.print("   +");
+		for (int col = 0; col < BOARD_SIZE; col++)
+			System.out.print("--");
+		System.out.println("-+");
+	}
+
+	private static void printHeader() {
 		System.out.println();
 		System.out.print("    ");
 		for (int col = 0; col < BOARD_SIZE; col++) {
@@ -70,27 +85,40 @@ public class Game implements IGame
 			System.out.print("--");
 		}
 		System.out.println("+");
+	}
 
-		for (int row = 0; row < BOARD_SIZE; row++) {
-			Position pos = new Position(row, 0);
-			char rowLabel = pos.getClassicRow();
-			System.out.print(" " + rowLabel + " |");
-			for (int col = 0; col < BOARD_SIZE; col++)
-				System.out.print(" " + map[row][col]);
-			System.out.println(" |");
+	private static void markShotsOnMap(List<IMove> moves, boolean show_shots, char[][] map) {
+		if (show_shots)
+			for (IMove move : moves)
+				for (IPosition shot : move.getShots()) {
+					if (shot.isInside()){
+						int row = shot.getRow();
+						int col = shot.getColumn();
+						if (map[row][col] == SHIP_MARKER)
+							map[row][col] = SHOT_SHIP_MARKER;
+						if (map[row][col] == EMPTY_MARKER || map[row][col] == SHIP_ADJACENT_MARKER)
+							map[row][col] = SHOT_WATER_MARKER;
+					}
+				}
+	}
+
+	private static void markShipsOnMap(IFleet fleet, char[][] map) {
+		for (IShip ship : fleet.getShips()) {
+			for (IPosition ship_pos : ship.getPositions())
+				map[ship_pos.getRow()][ship_pos.getColumn()] = SHIP_MARKER;
+			if (!ship.stillFloating())
+				for (IPosition adjacent_pos : ship.getAdjacentPositions())
+					map[adjacent_pos.getRow()][adjacent_pos.getColumn()] = SHIP_ADJACENT_MARKER;
 		}
+	}
 
-		System.out.print("   +");
-		for (int col = 0; col < BOARD_SIZE; col++)
-			System.out.print("--");
-		System.out.println("-+");
+	private static char[][] initMap() {
+		char[][] map = new char[BOARD_SIZE][BOARD_SIZE];
 
-		if (showLegend) {
-			System.out.println("          LEGENDA");
-			System.out.println("'" + SHIP_MARKER + "'->navio, '" + SHIP_ADJACENT_MARKER + "'->adjacente a navio, '" + EMPTY_MARKER + "'->água");
-			System.out.println("'" + SHOT_SHIP_MARKER + "'->Tiro certeiro, '" + SHOT_WATER_MARKER + "'->Tiro na água");
-		}
-		System.out.println();
+		for (int r = 0; r < BOARD_SIZE; r++)
+			for (int c = 0; c < BOARD_SIZE; c++)
+				map[r][c] = EMPTY_MARKER;
+		return map;
 	}
 
 	/**
