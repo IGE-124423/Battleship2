@@ -306,31 +306,62 @@ public class Tasks {
 	 * @return The classic position that has been read
 	 */
 	public static IPosition readClassicPosition(@NotNull Scanner in) {
-		if (!in.hasNext()) {
-			throw new IllegalArgumentException("Nenhuma posição válida encontrada!");
-		}
+		validateClassicPositionInput(in);
 
 		String part1 = in.next();
-		String part2 = null;
+		String part2 = readOptionalPositionPart(in);
+		String input = normalizeClassicPositionInput(part1, part2);
 
-		if (in.hasNextInt()) {
-			part2 = in.next();
-		}
+		IPosition position;
 
-		String input = (part2 != null) ? part1 + part2 : part1;
-
-		input = input.toUpperCase();
-
-		if (CLASSIC_POSITION_PATTERN.matcher(input).matches()) {
-			char column = input.charAt(0);
-			int row = Integer.parseInt(input.substring(1));
-			return new Position(column, row);
-		} else if (part2 != null && COLUMN_PATTERN.matcher(part1).matches() && ROW_PATTERN.matcher(part2).matches()) {
-			char column = part1.charAt(0);
-			int row = Integer.parseInt(part2);
-			return new Position(column, row);
+		if (isCombinedClassicPosition(input)) {
+			position = createPositionFromCombinedInput(input);
+		} else if (isSeparatedClassicPosition(part1, part2)) {
+			position = createPositionFromSeparatedInput(part1, part2);
 		} else {
 			throw new IllegalArgumentException("Formato inválido. Use 'A3', 'A 3' ou similar.");
 		}
+
+		return position;
+	}
+
+	private static void validateClassicPositionInput(Scanner in) {
+		if (!in.hasNext()) {
+			throw new IllegalArgumentException("Nenhuma posição válida encontrada!");
+		}
+	}
+
+	private static String readOptionalPositionPart(Scanner in) {
+		if (in.hasNextInt()) {
+			return in.next();
+		}
+		return null;
+	}
+
+	private static String normalizeClassicPositionInput(String part1, String part2) {
+		String input = (part2 != null) ? part1 + part2 : part1;
+		return input.toUpperCase();
+	}
+
+	private static boolean isCombinedClassicPosition(String input) {
+		return CLASSIC_POSITION_PATTERN.matcher(input).matches();
+	}
+
+	private static boolean isSeparatedClassicPosition(String part1, String part2) {
+		return part2 != null
+				&& COLUMN_PATTERN.matcher(part1).matches()
+				&& ROW_PATTERN.matcher(part2).matches();
+	}
+
+	private static IPosition createPositionFromCombinedInput(String input) {
+		char column = input.charAt(0);
+		int row = Integer.parseInt(input.substring(1));
+		return new Position(column, row);
+	}
+
+	private static IPosition createPositionFromSeparatedInput(String part1, String part2) {
+		char column = part1.charAt(0);
+		int row = Integer.parseInt(part2);
+		return new Position(column, row);
 	}
 }
