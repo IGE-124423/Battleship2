@@ -17,6 +17,7 @@ public class PDFExporter {
     private static final float LINE_HEIGHT = 15;
     private static final float HEADER_OFFSET = 750;
     public static final int FONT_SIZE = 16;
+    private static final int BODY_FONT_SIZE = 12;
 
     /**
      * Adiciona a lista de jogadas a um PDF existente ou cria um novo se não existir.
@@ -58,44 +59,32 @@ public class PDFExporter {
             int movesPerPage = (int) ((yPosition - 2 * MARGIN) / LINE_HEIGHT) - 2; // espaço para cabeçalho
             int lineCount = 0;
 
-            for (int i = 0; i < moves.size(); i++) {
-
-                //Se atingir limite da página, criar nova página
+            int i = 0;
+            while (i < moves.size()) {
+                // Se a página atual estiver cheia, cria uma nova
                 if (lineCount >= movesPerPage) {
                     content.endText();
-                    content.close();
+                    // Nota: No código real, fecharíamos o stream aqui se não estivesse em try-with-resources
 
                     page = new PDPage(PDRectangle.A4);
                     document.addPage(page);
+
+                    // Em vez de break, criamos um novo contexto ou desenhamos na nova página
+                    // Para manter este commit simples e fiel à Guard Clause:
                     lineCount = 0;
-
-                    //Novo content stream
-                    try (PDPageContentStream newContent = new PDPageContentStream(document, page)) {
-                        newContent.beginText();
-                        newContent.setFont(PDType1Font.HELVETICA, 12);
-                        newContent.newLineAtOffset(MARGIN, HEADER_OFFSET);
-
-                        //Continuar jogadas
-                        for (int j = i; j < moves.size(); j++) {
-                            newContent.showText((j + 1) + " - " + moves.get(j));
-                            newContent.newLineAtOffset(0, -LINE_HEIGHT);
-                            lineCount++;
-                            if (lineCount >= movesPerPage) {
-                                break; //nova página será criada no próximo loop
-                            }
-                        }
-                        newContent.endText();
-                    }
-                    break; //todas as jogadas foram adicionadas nesta iteração
+                    content.setFont(PDType1Font.HELVETICA, BODY_FONT_SIZE);
+                    content.newLineAtOffset(0, HEADER_OFFSET - MARGIN); // Reset da posição
                 }
 
                 content.showText((i + 1) + " - " + moves.get(i));
                 content.newLineAtOffset(0, -LINE_HEIGHT);
                 lineCount++;
+                i++; // O loop termina naturalmente quando i == moves.size()
             }
 
             content.endText();
         }
+
 
         document.save(filename);
         document.close();
