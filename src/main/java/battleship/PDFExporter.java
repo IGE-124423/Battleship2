@@ -21,7 +21,6 @@ public class PDFExporter {
 
     public static void exportMoves(List<String> moves, String filename) throws IOException {
         File file = new File(filename);
-
         PDDocument document = loadOrCreateDocument(file);
         writeAllMoves(document, moves);
         saveAndClose(document, filename);
@@ -33,6 +32,7 @@ public class PDFExporter {
         }
         return new PDDocument();
     }
+
     private static void writeAllMoves(PDDocument document, List<String> moves) throws IOException {
         PDPage page = new PDPage(PDRectangle.A4);
         document.addPage(page);
@@ -40,12 +40,12 @@ public class PDFExporter {
         try (PDPageContentStream content = new PDPageContentStream(document, page)) {
             writeHeader(content);
 
-            int movesPerPage = (int) ((HEADER_OFFSET - 2 * MARGIN) / LINE_HEIGHT) - 2;
+            int movesPerPage = calculateMovesPerPage();
             int lineCount = 0;
             int i = 0;
 
             while (i < moves.size()) {
-                if (lineCount >= movesPerPage) {
+                if (isPageFull(lineCount, movesPerPage)) {
                     lineCount = 0;
                 }
                 content.showText((i + 1) + " - " + moves.get(i));
@@ -55,6 +55,14 @@ public class PDFExporter {
             }
             content.endText();
         }
+    }
+
+    private static boolean isPageFull(int currentLine, int maxLines) {
+        return currentLine >= maxLines;
+    }
+
+    private static int calculateMovesPerPage() {
+        return (int) ((HEADER_OFFSET - 2 * MARGIN) / LINE_HEIGHT) - 2;
     }
 
     private static void writeHeader(PDPageContentStream content) throws IOException {
