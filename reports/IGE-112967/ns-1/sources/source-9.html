@@ -1,0 +1,325 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GameGUI</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">battleship</a>
+</div>
+
+<h1>Coverage Summary for Class: GameGUI (battleship)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameGUI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/36)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/57)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GameGUI$CellPanel</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/48)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/76)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package battleship;
+&nbsp;
+&nbsp;import com.formdev.flatlaf.FlatDarkLaf;
+&nbsp;import javax.swing.*;
+&nbsp;import java.awt.*;
+&nbsp;import java.net.URL;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * A interface gráfica (GUI) para visualizar o tabuleiro do jogo Battleship.
+&nbsp; */
+&nbsp;public class GameGUI extends JFrame {
+&nbsp;    private static final int CELL_SIZE = 50;
+&nbsp;
+&nbsp;    // Imagens carregadas (podem ser null se não existirem na pasta resources)
+&nbsp;    private Image imgWater;
+&nbsp;    private Image imgShip;
+&nbsp;    private Image imgHit;
+&nbsp;    private Image imgMiss;
+&nbsp;    private Image imgAdjacent;
+&nbsp;
+&nbsp;    public GameGUI(Game game) {
+<b class="nc">&nbsp;        super(&quot;Battleship - Visualização Gráfica&quot;);</b>
+&nbsp;        
+&nbsp;        // Carregar imagens da pasta src/main/resources (se existirem)
+<b class="nc">&nbsp;        imgWater = loadImage(&quot;/water.png&quot;);</b>
+<b class="nc">&nbsp;        imgShip = loadImage(&quot;/ship.png&quot;);</b>
+<b class="nc">&nbsp;        imgHit = loadImage(&quot;/hit.png&quot;);</b>
+<b class="nc">&nbsp;        imgMiss = loadImage(&quot;/miss.png&quot;);</b>
+<b class="nc">&nbsp;        imgAdjacent = loadImage(&quot;/adjacent.png&quot;);</b>
+&nbsp;
+&nbsp;        // Configurar o visual moderno usando o FlatLaf Dark Mode
+&nbsp;        try {
+<b class="nc">&nbsp;            UIManager.setLookAndFeel(new FlatDarkLaf());</b>
+<b class="nc">&nbsp;            SwingUtilities.updateComponentTreeUI(this);</b>
+&nbsp;        } catch (Exception ex) {
+<b class="nc">&nbsp;            System.err.println(&quot;Falha ao carregar o tema visual FlatLaf&quot;);</b>
+&nbsp;        }
+&nbsp;        
+&nbsp;        // Queremos apenas fechar a janela, sem terminar a aplicação de consola
+<b class="nc">&nbsp;        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);</b>
+<b class="nc">&nbsp;        setLayout(new BorderLayout());</b>
+&nbsp;        
+<b class="nc">&nbsp;        JPanel boardPanel = new JPanel();</b>
+<b class="nc">&nbsp;        boardPanel.setLayout(new GridLayout(Game.BOARD_SIZE, Game.BOARD_SIZE, 2, 2));</b>
+<b class="nc">&nbsp;        boardPanel.setBackground(Color.DARK_GRAY);</b>
+<b class="nc">&nbsp;        boardPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));</b>
+&nbsp;
+&nbsp;        // Obter os dados da frota e do jogo
+<b class="nc">&nbsp;        IFleet fleet = game.getMyFleet();</b>
+<b class="nc">&nbsp;        List&lt;IMove&gt; moves = game.getAlienMoves();</b>
+&nbsp;        
+&nbsp;        // Construir a representação do mapa
+<b class="nc">&nbsp;        char[][] map = new char[Game.BOARD_SIZE][Game.BOARD_SIZE];</b>
+<b class="nc">&nbsp;        for (int r = 0; r &lt; Game.BOARD_SIZE; r++) {</b>
+<b class="nc">&nbsp;            for (int c = 0; c &lt; Game.BOARD_SIZE; c++) {</b>
+<b class="nc">&nbsp;                map[r][c] = &#39;.&#39;;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (fleet != null) {</b>
+<b class="nc">&nbsp;            for (IShip ship : fleet.getShips()) {</b>
+<b class="nc">&nbsp;                for (IPosition ship_pos : ship.getPositions()) {</b>
+<b class="nc">&nbsp;                    map[ship_pos.getRow()][ship_pos.getColumn()] = &#39;#&#39;;</b>
+&nbsp;                }
+<b class="nc">&nbsp;                if (!ship.stillFloating()) {</b>
+<b class="nc">&nbsp;                    for (IPosition adjacent_pos : ship.getAdjacentPositions()) {</b>
+<b class="nc">&nbsp;                        if (adjacent_pos.isInside()) {</b>
+<b class="nc">&nbsp;                            map[adjacent_pos.getRow()][adjacent_pos.getColumn()] = &#39;-&#39;;</b>
+&nbsp;                        }
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (moves != null) {</b>
+<b class="nc">&nbsp;            for (IMove move : moves) {</b>
+<b class="nc">&nbsp;                for (IPosition shot : move.getShots()) {</b>
+<b class="nc">&nbsp;                    if (shot.isInside()) {</b>
+<b class="nc">&nbsp;                        int row = shot.getRow();</b>
+<b class="nc">&nbsp;                        int col = shot.getColumn();</b>
+<b class="nc">&nbsp;                        if (map[row][col] == &#39;#&#39;) {</b>
+<b class="nc">&nbsp;                            map[row][col] = &#39;*&#39;; // Tiro Certeiro</b>
+<b class="nc">&nbsp;                        } else if (map[row][col] == &#39;.&#39; || map[row][col] == &#39;-&#39;) {</b>
+<b class="nc">&nbsp;                            map[row][col] = &#39;o&#39;; // Tiro na Água</b>
+&nbsp;                        }
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        // Desenhar a grelha usando um Painel Customizado para suportar imagens
+<b class="nc">&nbsp;        for (int r = 0; r &lt; Game.BOARD_SIZE; r++) {</b>
+<b class="nc">&nbsp;            for (int c = 0; c &lt; Game.BOARD_SIZE; c++) {</b>
+<b class="nc">&nbsp;                char marker = map[r][c];</b>
+<b class="nc">&nbsp;                boardPanel.add(new CellPanel(marker));</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        add(boardPanel, BorderLayout.CENTER);</b>
+&nbsp;        
+&nbsp;        // Painel da Legenda
+<b class="nc">&nbsp;        JPanel legendPanel = new JPanel();</b>
+<b class="nc">&nbsp;        legendPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10));</b>
+<b class="nc">&nbsp;        legendPanel.add(new JLabel(&quot;⬛ Navio  |&quot;));</b>
+<b class="nc">&nbsp;        legendPanel.add(new JLabel(&quot; 🟥 Tiro Certeiro  |&quot;));</b>
+<b class="nc">&nbsp;        legendPanel.add(new JLabel(&quot; 🟦 Água Intacta  |&quot;));</b>
+<b class="nc">&nbsp;        legendPanel.add(new JLabel(&quot; 🩵 Tiro na Água&quot;));</b>
+<b class="nc">&nbsp;        add(legendPanel, BorderLayout.SOUTH);</b>
+&nbsp;
+<b class="nc">&nbsp;        pack();</b>
+<b class="nc">&nbsp;        setLocationRelativeTo(null); // Centrar no ecrã</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Tenta carregar uma imagem do classpath (pasta resources).
+&nbsp;     */
+&nbsp;    private Image loadImage(String path) {
+<b class="nc">&nbsp;        URL imgUrl = getClass().getResource(path);</b>
+<b class="nc">&nbsp;        if (imgUrl != null) {</b>
+<b class="nc">&nbsp;            return new ImageIcon(imgUrl).getImage();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Componente visual para cada célula da grelha.
+&nbsp;     * Desenha a cor de fundo apropriada e, se a imagem existir, desenha-a por cima.
+&nbsp;     */
+&nbsp;    private class CellPanel extends JPanel {
+&nbsp;        private char marker;
+&nbsp;
+<b class="nc">&nbsp;        public CellPanel(char marker) {</b>
+<b class="nc">&nbsp;            this.marker = marker;</b>
+<b class="nc">&nbsp;            setPreferredSize(new Dimension(CELL_SIZE, CELL_SIZE));</b>
+&nbsp;            
+&nbsp;            // Definir cor de fundo de segurança (fallback) se a imagem não existir
+<b class="nc">&nbsp;            switch (marker) {</b>
+<b class="nc">&nbsp;                case &#39;#&#39;: setBackground(new Color(120, 120, 120)); break; // Navio</b>
+<b class="nc">&nbsp;                case &#39;*&#39;: setBackground(new Color(220, 50, 50)); break;   // Tiro no Navio</b>
+<b class="nc">&nbsp;                case &#39;o&#39;: setBackground(new Color(150, 200, 220)); break; // Tiro na Água</b>
+<b class="nc">&nbsp;                case &#39;-&#39;: setBackground(new Color(40, 60, 100)); break;   // Área Adjacente</b>
+&nbsp;                case &#39;.&#39;: 
+<b class="nc">&nbsp;                default: setBackground(new Color(50, 120, 200)); break;   // Água Intacta</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        @Override
+&nbsp;        protected void paintComponent(Graphics g) {
+<b class="nc">&nbsp;            super.paintComponent(g); // Desenha a cor de fundo</b>
+&nbsp;            
+<b class="nc">&nbsp;            Image imgToDraw = null;</b>
+<b class="nc">&nbsp;            switch (marker) {</b>
+<b class="nc">&nbsp;                case &#39;#&#39;: imgToDraw = imgShip; break;</b>
+<b class="nc">&nbsp;                case &#39;*&#39;: imgToDraw = imgHit; break;</b>
+<b class="nc">&nbsp;                case &#39;o&#39;: imgToDraw = imgMiss; break;</b>
+<b class="nc">&nbsp;                case &#39;-&#39;: imgToDraw = imgAdjacent; break;</b>
+<b class="nc">&nbsp;                case &#39;.&#39;: imgToDraw = imgWater; break;</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            // Se conseguimos carregar a imagem do disco, desenha-a a preencher todo o quadrado!
+<b class="nc">&nbsp;            if (imgToDraw != null) {</b>
+<b class="nc">&nbsp;                g.drawImage(imgToDraw, 0, 0, getWidth(), getHeight(), this);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-04-23 14:35</div>
+</div>
+</body>
+</html>
