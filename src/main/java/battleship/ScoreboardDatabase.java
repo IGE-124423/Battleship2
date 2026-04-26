@@ -59,10 +59,12 @@ public class ScoreboardDatabase {
             System.out.println();
             System.out.println("=============== SCOREBOARD ===============");
 
-            boolean hasResults = false;
+            if (!rs.next()) {
+                System.out.println("Ainda não existem jogos registados.");
+                return;
+            }
 
-            while (rs.next()) {
-                hasResults = true;
+            do {
                 String winner = rs.getString("winner");
                 String loser = rs.getString("loser");
                 int moves = rs.getInt("moves");
@@ -73,11 +75,7 @@ public class ScoreboardDatabase {
                 System.out.println("Jogadas: " + moves);
                 System.out.println("Data: " + playedAt);
                 System.out.println("------------------------------------------");
-            }
-
-            if (!hasResults) {
-                System.out.println("Ainda não existem jogos registados.");
-            }
+            } while (rs.next());
 
         } catch (SQLException e) {
             System.out.println("Erro ao consultar o scoreboard.");
