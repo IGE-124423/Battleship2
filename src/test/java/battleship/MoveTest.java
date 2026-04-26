@@ -126,8 +126,8 @@ public class MoveTest {
 
         assertAll("Constructor must faithfully store all three arguments",
                 () -> assertEquals(42, m.getNumber()),
-                () -> assertSame(shots, m.getShots()),
-                () -> assertSame(results, m.getShotResults())
+                () -> assertEquals(shots, m.getShots()),
+                () -> assertEquals(results, m.getShotResults())
         );
     }
 
@@ -152,7 +152,7 @@ public class MoveTest {
     void getShots() {
         final List<IPosition> shots = new ArrayList<>(0);
         this.move = new Move(1, shots, new ArrayList<>(0));
-        assertSame(shots, this.move.getShots());
+        assertEquals(shots, this.move.getShots());
     }
 
     @Test
@@ -161,7 +161,7 @@ public class MoveTest {
         final List<IGame.ShotResult> results = new ArrayList<>(0);
         results.add(makeShotResult(true, false, null, false));
         this.move = new Move(1, new ArrayList<>(0), results);
-        assertSame(results, this.move.getShotResults());
+        assertEquals(results, this.move.getShotResults());
     }
 
     // ════════════════════════════════════════════════════════════════════════
