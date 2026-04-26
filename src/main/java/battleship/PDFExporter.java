@@ -19,76 +19,61 @@ public class PDFExporter {
     public static final int FONT_SIZE = 16;
     private static final int BODY_FONT_SIZE = 12;
 
-    /**
-     * Adiciona a lista de jogadas a um PDF existente ou cria um novo se não existir.
-     *
-     * @param moves    Lista de movimentos do jogo
-     * @param filename Nome do ficheiro PDF a criar/adicionar
-     * @throws IOException Caso haja erro na escrita do ficheiro
-     */
     public static void exportMoves(List<String> moves, String filename) throws IOException {
-        PDDocument document;
         File file = new File(filename);
 
-        if (file.exists()) {
-            document = PDDocument.load(file);
-        } else {
-            document = new PDDocument();
-        }
+        PDDocument document = loadOrCreateDocument(file);
+        writeAllMoves(document, moves);
+        saveAndClose(document, filename);
+    }
 
-        //Cria nova página para esta partida
+    private static PDDocument loadOrCreateDocument(File file) throws IOException {
+        if (file.exists()) {
+            return PDDocument.load(file);
+        }
+        return new PDDocument();
+    }
+
+    private static void writeAllMoves(PDDocument document, List<String> moves) throws IOException {
         PDPage page = new PDPage(PDRectangle.A4);
         document.addPage(page);
 
-        float yPosition = HEADER_OFFSET;
-
         try (PDPageContentStream content = new PDPageContentStream(document, page)) {
-            content.beginText();
-            content.setFont(PDType1Font.HELVETICA_BOLD, FONT_SIZE);
-            content.newLineAtOffset(MARGIN, yPosition);
+            writeHeader(content);
 
-            //Cabeçalho com data/hora da partida
-            LocalDateTime agora = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-            content.showText("Partida jogada em: " + agora.format(formatter));
-            content.newLineAtOffset(0, -LINE_HEIGHT * 2);
-
-            //Jogadas
-            content.setFont(PDType1Font.HELVETICA, 12);
-
-            int movesPerPage = (int) ((yPosition - 2 * MARGIN) / LINE_HEIGHT) - 2; // espaço para cabeçalho
+            int movesPerPage = (int) ((HEADER_OFFSET - 2 * MARGIN) / LINE_HEIGHT) - 2;
             int lineCount = 0;
-
             int i = 0;
+
             while (i < moves.size()) {
-                // Se a página atual estiver cheia, cria uma nova
                 if (lineCount >= movesPerPage) {
-                    content.endText();
-                    // Nota: No código real, fecharíamos o stream aqui se não estivesse em try-with-resources
-
-                    page = new PDPage(PDRectangle.A4);
-                    document.addPage(page);
-
-                    // Em vez de break, criamos um novo contexto ou desenhamos na nova página
-                    // Para manter este commit simples e fiel à Guard Clause:
                     lineCount = 0;
-                    content.setFont(PDType1Font.HELVETICA, BODY_FONT_SIZE);
-                    content.newLineAtOffset(0, HEADER_OFFSET - MARGIN); // Reset da posição
                 }
-
                 content.showText((i + 1) + " - " + moves.get(i));
                 content.newLineAtOffset(0, -LINE_HEIGHT);
                 lineCount++;
-                i++; // O loop termina naturalmente quando i == moves.size()
+                i++;
             }
-
             content.endText();
         }
+    }
 
+    private static void writeHeader(PDPageContentStream content) throws IOException {
+        content.beginText();
+        content.setFont(PDType1Font.HELVETICA_BOLD, FONT_SIZE);
+        content.newLineAtOffset(MARGIN, HEADER_OFFSET);
 
+        LocalDateTime agora = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        content.showText("Partida jogada em: " + agora.format(formatter));
+        content.newLineAtOffset(0, -LINE_HEIGHT * 2);
+
+        content.setFont(PDType1Font.HELVETICA, BODY_FONT_SIZE);
+    }
+
+    private static void saveAndClose(PDDocument document, String filename) throws IOException {
         document.save(filename);
         document.close();
-
-        System.out.println("PDF atualizado com sucesso em: " + file.getAbsolutePath());
+        System.out.println("PDF atualizado com sucesso em: " + new File(filename).getAbsolutePath());
     }
 }
