@@ -16,6 +16,7 @@ public class PDFExporter {
     private static final float MARGIN = 50;
     private static final float LINE_HEIGHT = 15;
     private static final float HEADER_OFFSET = 750;
+    public static final int FONT_SIZE = 16;
 
     /**
      * Adiciona a lista de jogadas a um PDF existente ou cria um novo se não existir.
@@ -42,7 +43,7 @@ public class PDFExporter {
 
         try (PDPageContentStream content = new PDPageContentStream(document, page)) {
             content.beginText();
-            content.setFont(PDType1Font.HELVETICA_BOLD, 16);
+            content.setFont(PDType1Font.HELVETICA_BOLD, FONT_SIZE);
             content.newLineAtOffset(MARGIN, yPosition);
 
             //Cabeçalho com data/hora da partida
