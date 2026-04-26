@@ -89,9 +89,9 @@ public class Move implements IMove {
 		FireStats stats = new FireStats();
 
 		for (IGame.ShotResult result : this.shotResults) {
-			if (!result.valid()) continue;
+			if (isInvalid(result)) continue;
 
-			if (result.repeated()) {
+			if (isRepeated(result)) {
 				stats.repeatedShots++;
 				continue;
 			}
@@ -116,6 +116,13 @@ public class Move implements IMove {
 		stats.outsideShots = Game.NUMBER_SHOTS - stats.validShots - stats.repeatedShots;
 
 		return stats;
+	}
+
+	private static boolean isInvalid(IGame.ShotResult result) {
+		return !result.valid();
+	}
+	private static boolean isRepeated(IGame.ShotResult result) {
+		return result.repeated();
 	}
 
 	private void printVerbose(FireStats stats) {
