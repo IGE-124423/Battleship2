@@ -33,7 +33,6 @@ public class PDFExporter {
         }
         return new PDDocument();
     }
-
     private static void writeAllMoves(PDDocument document, List<String> moves) throws IOException {
         PDPage page = new PDPage(PDRectangle.A4);
         document.addPage(page);
