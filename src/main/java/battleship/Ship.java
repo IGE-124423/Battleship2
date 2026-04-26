@@ -225,7 +225,7 @@ public abstract class Ship implements IShip
     {
 	for (int i = 0; i < getSize(); i++)
 	    if (!getPositions().get(i).isHit())
-		return true;
+			return true;
 	return false;
     }
 
@@ -394,8 +394,7 @@ public abstract class Ship implements IShip
 		assert pos != null;
 		assert pos.isInside();
 
-		for (IPosition position : getPositions())
-		{
+		for (IPosition position : getPositions()) {
 			if (position.equals(pos))
 				position.shoot();
 		}

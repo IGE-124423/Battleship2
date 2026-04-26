@@ -1,6 +1,9 @@
 package battleship;
 
 import org.junit.jupiter.api.*;
+
+import java.util.HashSet;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -88,4 +91,23 @@ public class CompassTest {
 	void charToCompass3() {
 		assertNull(Compass.charToCompass('\0'), "Error: Null character should map to null.");
 	}
+
+	/**
+	 * Test for the randomBearing method.
+	 * Cyclomatic Complexity: 2
+	 */
+	@Test
+	@DisplayName("Cheks the value givem by the method is always in the compass enum")
+	void testRandomBearing() {
+		java.util.Set<Compass> directions = new java.util.HashSet<>();
+
+		for (int i = 0; i < 100; i++) {
+			Compass c = Compass.randomBearing();
+			assertNotNull(c, "Error: Compass value should not be null");
+			directions.add(c);
+		}
+
+		assertEquals(4, directions.size(), "Error: There should only be 4 directions");
+	}
+
 }
