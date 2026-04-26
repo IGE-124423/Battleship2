@@ -31,7 +31,7 @@ public class Move implements IMove {
 	public String toString() {
 		return "Move{" +
 				"number=" + number +
-				", shots=" + shots.size() +
+				", shots=" + getShots().size() +
 				", results=" + shotResults.size() +
 				'}';
 	}
@@ -43,7 +43,7 @@ public class Move implements IMove {
 
 	@Override
 	public List<IPosition> getShots() {
-		return this.shots;
+		return new ArrayList<>(this.shots);
 	}
 
 	@Override
