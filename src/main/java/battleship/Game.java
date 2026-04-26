@@ -4,7 +4,6 @@ import java.io.IOException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.jetbrains.annotations.NotNull;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -15,6 +14,7 @@ import java.util.random.RandomGenerator;
 
 public class Game implements IGame
 {
+	private final RandomGenerator random = new SecureRandom();
 	/**
 	 * Prints the game board by representing the positions of ships, adjacent tiles,
 	 * shots, and other game elements onto the console. The method also optionally
@@ -241,9 +241,6 @@ public class Game implements IGame
 	 * @throws RuntimeException if there is an error during the JSON serialization of the shots.
 	 */
 	public String randomEnemyFire() {
-
-		// Criar uma instância de Random com uma seed baseada no timestamp atual
-		SecureRandom random = new SecureRandom();
 
 		Set<IPosition> usablePositions = new HashSet<IPosition>();
 		for (int r = 0; r < BOARD_SIZE; r++)
