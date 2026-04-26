@@ -23,8 +23,8 @@ public class Move implements IMove {
 	//-------------------------------------------------------------------
 	public Move(int moveNumber, List<IPosition> moveShots, List<IGame.ShotResult> moveResults) {
 		this.number = moveNumber;
-		this.shots = moveShots;
-		this.shotResults = moveResults;
+		this.shots = new ArrayList<>(moveShots);
+		this.shotResults = new ArrayList<>(moveResults);
 	}
 
 	@Override
