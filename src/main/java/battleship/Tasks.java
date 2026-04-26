@@ -70,7 +70,22 @@ public class Tasks {
 						game.printMyBoard(false, true);
 					break;
 				case RAJADA:
-					extracted(game, in, myFleet);
+					if (game != null) {
+						StopWatch sw = StopWatch.createStarted();
+
+						game.readEnemyFire(in);
+
+						sw.stop();
+						myFleet.printStatus();
+						game.printMyBoard(true, false);
+
+						System.out.println(">>> Tempo gasto na jogada: " + sw.toString());
+
+						if (game.getRemainingShips() == 0) {
+							game.over();
+							System.exit(0);
+						}
+					}
 					break;
 				case SIMULA:
 					if (game != null) {
@@ -116,25 +131,6 @@ public class Tasks {
 			command = in.next();
 		}
 		System.out.println(GOODBYE_MESSAGE);
-	}
-
-	private static void extracted(IGame game, Scanner in, IFleet myFleet) {
-		if (game != null) {
-			StopWatch sw = StopWatch.createStarted();
-
-			game.readEnemyFire(in);
-
-			sw.stop();
-			myFleet.printStatus();
-			game.printMyBoard(true, false);
-
-			System.out.println(">>> Tempo gasto na jogada: " + sw.toString());
-
-			if (game.getRemainingShips() == 0) {
-				game.over();
-				System.exit(0);
-			}
-		}
 	}
 
 	/**
