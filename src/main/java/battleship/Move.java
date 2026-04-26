@@ -161,7 +161,7 @@ public class Move implements IMove {
 
 	private void appendHits(StringBuilder output, FireStats stats) {
 		for (var entry : stats.hitsPerBoat.entrySet()) {
-			if (!stats.sunkBoats.containsKey(entry.getKey())) {
+			if (isNotSunkBoat(stats, entry)) {
 				output.append(entry.getValue())
 						.append(" tiro")
 						.append(entry.getValue() > 1 ? "s" : "")
@@ -170,6 +170,10 @@ public class Move implements IMove {
 						.append(" + ");
 			}
 		}
+	}
+
+	private boolean isNotSunkBoat(FireStats stats, Map.Entry<String, Integer> entry) {
+		return !stats.sunkBoats.containsKey(entry.getKey());
 	}
 
 	private void appendMisses(StringBuilder output, FireStats stats) {
@@ -231,7 +235,7 @@ public class Move implements IMove {
 		List<Map<String, Object>> list = new ArrayList<>();
 
 		for (var entry : stats.hitsPerBoat.entrySet()) {
-			if (!stats.sunkBoats.containsKey(entry.getKey())) {
+			if (isNotSunkBoat(stats, entry)) {
 				Map<String, Object> boat = new HashMap<>();
 				boat.put("type", entry.getKey());
 				boat.put("hits", entry.getValue());
