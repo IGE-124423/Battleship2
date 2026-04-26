@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.jetbrains.annotations.NotNull;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -242,7 +243,7 @@ public class Game implements IGame
 	public String randomEnemyFire() {
 
 		// Criar uma instância de Random com uma seed baseada no timestamp atual
-		RandomGenerator random = new Random(System.currentTimeMillis());
+		SecureRandom random = new SecureRandom();
 
 		Set<IPosition> usablePositions = new HashSet<IPosition>();
 		for (int r = 0; r < BOARD_SIZE; r++)
