@@ -56,12 +56,12 @@ public class Position implements IPosition {
 	 * Constructs a new Position with the specified row and column.
 	 * By default, the position is not occupied and not hit.
 	 *
-	 * @param row    the row coordinate of the position
-	 * @param column the column coordinate of the position
+	 * @param rowValue    the row coordinate of the position
+	 * @param columnValue the column coordinate of the position
 	 */
-	public Position(int row, int column) {
-		this.row = row;
-		this.column = column;
+	public Position(int rowValue, int columnValue) {
+		this.row = rowValue;
+		this.column = columnValue;
 		this.isOccupied = false;
 		this.isHit = false;
 	}
